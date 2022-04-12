@@ -1,0 +1,28 @@
+<html>
+<script src="https://jspreadsheet.com/v8/jspreadsheet.js"></script>
+<script src="https://jsuites.net/v4/jsuites.js"></script>
+<link rel="stylesheet" href="https://jspreadsheet.com/v8/jspreadsheet.css" type="text/css" />
+<link rel="stylesheet" href="https://jsuites.net/v4/jsuites.css" type="text/css" />
+ 
+<div id='spreadsheet'></div>
+ 
+<script>
+jspreadsheet.setLicense('MDE3YWY0YTlkMzZmYmY4N2IxOTU3OTg2MDc0NTA1ZGFlNzA4MWY5OTAwNTFjN2RhMmJmYzdmMmEzNWI4ODdkZWQ2ZjhjYTAxZTI0OTRlNDk3NDMzOGQ5MDhhNDYwOGIyOTY4OGM0MjViZDVhZjA1YTk0MTIzMWI5NGM4ZTI5ZWIsZXlKdVlXMWxJam9pWkhVZ1luVnBJaXdpWkdGMFpTSTZNVFkxTWpJeU16WXdNQ3dpWkc5dFlXbHVJanBiSWlJc0lteHZZMkZzYUc5emRDSmRMQ0p3YkdGdUlqb3dMQ0p6WTI5d1pTSTZXeUoyTnlJc0luWTRJbDE5');
+ 
+jspreadsheet(document.getElementById('spreadsheet'), {
+    worksheets: [{
+        data: [
+            ['Mazda', 2001, 2000],
+            ['Pegeout', 2010, 5000],
+            ['Honda Fit', 2009, 3000],
+            ['Honda CRV', 2010, 6000],
+        ],
+        columns: [
+            { title:'Model', width:'300px' },
+            { title:'Price', width:'80px' },
+            { title:'Model', width:'100px' }
+        ]
+    }]
+});
+</script>
+</html>

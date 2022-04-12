@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lí excel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/50ecca59bf.js" crossorigin="anonymous"></script>
+    <script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./style/select_all.css">
+    <script src="./app/localApi.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+</head>
+<body>
+    <div class="app">
+        <header class="m-4 mb-6">
+            <button id="dropdownInformationButton" data-dropdown-toggle="off" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button" >
+                Menu
+                <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+
+            <div id="dropdownInformation" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"  data-popper-reference-hidden="" data-popper-escaped="" style="position: absolute;inset: 56px auto auto 13px; "data-popper-placement="top">
+                <div class="py-3 px-4 text-sm text-gray-900 dark:text-white">
+                    <div>TheZoo</div>
+                    <div class="font-medium truncate">zoocp1232gmail.com</div>
+                </div>
+                <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownInformationButton">
+                    <li>
+                        <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+                    </li>
+                        <li>
+                        <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
+                    </li>
+                </ul>
+                <div class="py-1 hidden" id="logout-button" >
+                    <a href="" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white ">Sign out</a>
+                </div>
+                <div class="py-1" id="login-button">
+                    <a href="" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign in</a>
+                </div>
+            </div>
+        </header>
+        <div class="main mb-8">
+            <div class="max-w-2xl mx-auto">
+
+                <div class="flex flex-col">
+                <div class="overflow-x-auto shadow-md sm:rounded-lg">
+                    <div class="inline-block min-w-full align-middle">
+                        <div class="overflow-hidden ">
+                            <table id="data-table" class="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-700">
+                                <thead id="table-list" class="bg-gray-100 dark:bg-gray-700">
+                                    <tr>
+                                       
+                                    </tr>
+                                </thead>
+                                <tbody id="table-items" class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                                
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </div>
+
+        <div class="delete-row hidden pl-5">
+            <button id="delete-row_button" class="  px-10 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button" >
+               Xóa
+            </button>
+        </div>
+
+        <div id="add-item_form" class="mx-4 my-10">
+        
+        </div>
+        
+        <footer class="p-4 bg-white rounded-lg shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-800 b-t-black">
+            <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2022 <a href="https://duhentaiblog.xyz" class="hover:underline">ZooTeam™</a>. All Rights Reserved.
+            </span>
+            <ul class="flex flex-wrap items-center mt-3 text-sm text-gray-500 dark:text-gray-400 sm:mt-0">
+                <li>
+                    <a href="#" class="mr-4 hover:underline md:mr-6 ">About</a>
+                </li>
+                <li>
+                    <a href="#" class="mr-4 hover:underline md:mr-6">Privacy Policy</a>
+                </li>
+                <li>
+                    <a href="#" class="mr-4 hover:underline md:mr-6">Licensing</a>
+                </li>
+                <li>
+                    <a href="#" class="hover:underline">Contact</a>
+                </li>
+            </ul>
+        </footer>
+    </div>
+   
+    <script>
+        $('#dropdownInformationButton').click(function() {
+            $('#dropdownInformation').toggle()
+        })
+    </script>
+    <script src="./app/app.js" ></script>
+    <script src="./app/getProduct.js" ></script>
+    <script src="./app/add_column_item.js" ></script>
+    <script src="./app/filter_items.js" ></script>
+    <script src="./app/sort_items.js" ></script>
+    <script>
+    //    $(document).ready( function () {
+    //         $('#data-table').DataTable();
+    //     } );
+    </script>
+</body>
+</html>
