@@ -1,8 +1,12 @@
-const path = `/app/exampleData.json`;
-fetch(path)
-    .then(res => res.json())
-    .then(result => {
-        createGridTable(result[0]);
-        products = result[0];
-});
 
+function getProduct() {
+    const uid = apiFirebase.getLogin().uid;
+    database.ref('table/'+ uid).once('value', (snapShoot) => {
+        products = snapShoot.val()
+    }).then((result) => {
+
+        createGridTable(products)  
+    }).catch((err) => {
+        
+    });
+}

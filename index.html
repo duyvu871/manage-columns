@@ -14,8 +14,6 @@
     <link rel="stylesheet" href="./style/select_all.css">
     <script src="./app/localApi.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 </head>
 <body>
     <div class="app">
@@ -42,10 +40,10 @@
                     </li>
                 </ul>
                 <div class="py-1 hidden" id="logout-button" >
-                    <a href="" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white ">Sign out</a>
+                    <p  class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white ">Sign out</p>
                 </div>
                 <div class="py-1" id="login-button">
-                    <a href="" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign in</a>
+                    <p class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign in</p>
                 </div>
             </div>
         </header>
@@ -55,7 +53,7 @@
                 <div class="flex flex-col">
                 <div class="overflow-x-auto shadow-md sm:rounded-lg">
                     <div class="inline-block min-w-full align-middle">
-                        <div class="overflow-hidden ">
+                        <div class="">
                             <table id="data-table" class="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-700">
                                 <thead id="table-list" class="bg-gray-100 dark:bg-gray-700">
                                     <tr>

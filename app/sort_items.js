@@ -1,6 +1,6 @@
 function toggleSorted(event) {
     const relativeIndex = event.id.replace('sort-column-','');
-    console.log(relativeIndex);
+   
     if (event.getAttribute('active') === 'on') {
         sortTable(relativeIndex);
         event.innerText = 'Về ban Đầu';
@@ -18,7 +18,7 @@ function sortTable(relativeIndex) {
     $('#table-items').html('')
     
     sortedTable.forEach(element => {
-        console.log(element);
+
         $('#table-items').append(element)
     });
 }

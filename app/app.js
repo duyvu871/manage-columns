@@ -6,20 +6,17 @@
 //          ////////////////////////////////////
 //         ||||||||||||||||||||||||||||||||||||
 
-const firebaseConfig = {
+var config = {
     apiKey: "AIzaSyAXfPJoBZzAU51An5YgW0FksBVsHY_yU8M",
     authDomain: "excel-mange.firebaseapp.com",
+    databaseURL: "https://excel-mange-default-rtdb.asia-southeast1.firebasedatabase.app",
     projectId: "excel-mange",
     storageBucket: "excel-mange.appspot.com",
     messagingSenderId: "893388233221",
-    appId: "1:893388233221:web:ee1c1bf6796906844ada6c",
-    measurementId: "G-0NSPWSZ3ZM"
+    appId: "1:893388233221:web:3ec687bdbbca2d5b4ada6c",
+    measurementId: "G-3T56NEMFHB"
 };
-
-// Initialize Firebase
-
-firebase.initializeApp(firebaseConfig);
-
+firebase.initializeApp(config)
 //Real time database
 
 var database = firebase.database();
@@ -33,17 +30,22 @@ var firestore = firebase.firestore();
 const auth = firebase.auth();
 
 //Some api for firebase by me 
+
 const apiFirebase = new API_Firebase(firebase);
 
-let products;
+let products = {};
 let deleteList = [];
 
+function signIn() {
+    apiFirebase.signIn()
+}
 
 function createGridTable(dataProducts) {
-    const items = dataProducts.data;
     const list = dataProducts.columns;
+    const items = dataProducts.data;
     
     const itemsConvert = items.map((item, index)=> {
+
         const checkboxIndex = index;
         return `
         <tr id="row-${checkboxIndex + 1}" class="hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -82,6 +84,7 @@ function createGridTable(dataProducts) {
     `;
 
     const listConvert =  list.map((item, index)=> {
+
             if (item === 'Select') {
                 return `
                 <th scope="col" class="p-4">
@@ -100,7 +103,7 @@ function createGridTable(dataProducts) {
             }
     
             return `
-            <th class="relative py-4 px-6 text-left text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            <th class="relative py-4 px-6 text-left text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white z-10">
                 <div class="open-column_option" onClick="showColumnOption(this)" id="col-${index + 1}">
                     ${item} 
                     <span class="ml-2">
@@ -109,7 +112,7 @@ function createGridTable(dataProducts) {
                     </span>
                 </div>
 
-                <div class="w-fit  bg-white shadow rounded absolute hidden top-[100%] ring-4 ring-gray-300 z-100" id="col-${index + 1}_option">
+                <div class="w-fit  bg-white shadow rounded absolute hidden  ring-4 ring-gray-300 z-50 col_option" id="col-${index + 1}_option">
                     <div class="w-full p-3 text-sm">
                         <input type="text" class="border-[#1d4ed8] border-2 rounded-lg p-2" placeholder="Tìm kiếm..."  id="filter-column-${index + 1}" onkeyup="filterContain(this, ${index + 1})" />
                     </div>
@@ -130,7 +133,6 @@ function createGridTable(dataProducts) {
     $('#table-list tr').html(listConvert);
     $('#table-items').html(itemsConvert);
 }
-
 
 function checkboxAll(event) {
     [...$('.checkbox-table-2')].forEach(element => element.checked = event.checked);
@@ -197,6 +199,8 @@ function addColumnToDB(event) {
     products.data = products.data.map(item => item.concat(''));
     
     createGridTable(products)
+    addDataToDB(products)
+
 }
 
 function addRowToDB(event) {
@@ -204,11 +208,12 @@ function addRowToDB(event) {
     let initialArray = [...formData].map((el, index) => {
        return el.value
     });
+    initialArray.unshift('')
     initialArray.unshift(false)
     products.data.push(initialArray)
 
     createGridTable(products)
-
+    addDataToDB(products)
 }
 
 function deleteRow() {
@@ -220,6 +225,8 @@ function deleteRow() {
         $('.delete-row').addClass('hidden')
 
     })
+    addDataToDB(products)
+
 }
 
 function deleteColumn(event) {
@@ -237,6 +244,8 @@ function deleteColumn(event) {
         
     }
     createGridTable(products)
+    addDataToDB(products)
+
 }
 
 function addToDeleteList(event) {
@@ -249,12 +258,14 @@ function addToDeleteList(event) {
                 deleteList.push(Number(this.id.replace('checkbox-','')) - 1);
             })
             showDeleteButton();
+            addDataToDB(products)
 
             return;
         }
 
         deleteList.push(index);
         showDeleteButton();
+        addDataToDB(products)
 
         return;
     }
@@ -262,6 +273,7 @@ function addToDeleteList(event) {
     if (event.id === "checkbox-all") {
         deleteList = [];
         showDeleteButton();
+        addDataToDB(products)
         
         return
     }
@@ -270,6 +282,7 @@ function addToDeleteList(event) {
 
     showDeleteButton();
 
+    addDataToDB(products)
     return;
 }
 
@@ -296,8 +309,17 @@ function removeDuplicate(arr) {
     return [...new Set(arr)];
 }
 
+function addDataToDB(dataProducts) {
+    const uid = apiFirebase.getLogin().uid;
+    database.ref('table/' + uid).set({
+        columns: dataProducts.columns,
+        data: dataProducts.data
+    })
+   
+}
+
 $('#login-button').click(function() {
-    apiFirebase.signIn();
+   apiFirebase.signIn();
 })
 
 $('#logout-button').click(function() {
@@ -315,14 +337,27 @@ $('#delete-row_button').click(deleteRow)
 
 auth.onAuthStateChanged((user) => {
     if (user) {
-     $('#login-button').addClass('hidden');
-     
-     $('#logout-button').removeClass('hidden');
+        $('#login-button').addClass('hidden');
+        $('#logout-button').removeClass('hidden');
+        
+        const uid = apiFirebase.getLogin().uid;
 
-     
-     setProfile(user);
- 
-}
+        database.ref('table/' + uid).once('value', (s)=>{
+            if (s.val()) {
+                getProduct()     
+            } else {
+                database.ref('table/' + uid).set({
+                    columns: ['STT', 'Select'],
+                    data: [
+                        ['', false]
+                    ]
+                })
+                setTimeout(getProduct, 2000)
+            }
+
+        })
+        setProfile(user)
+    }
 })
 
 
