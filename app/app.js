@@ -217,16 +217,16 @@ function addRowToDB(event) {
 }
 
 function deleteRow() {
-    deleteList.forEach(index => {
-        products.data.splice(index, 1)
-
+    deleteList.forEach((item, index) => {
+        products.data.splice(item, 1)
+        console.log(products);
         createGridTable(products)
 
         $('.delete-row').addClass('hidden')
 
     })
     addDataToDB(products)
-
+    deleteList = []
 }
 
 function deleteColumn(event) {
@@ -250,6 +250,7 @@ function deleteColumn(event) {
 
 function addToDeleteList(event) {
     const index = Number(event.id.replace('checkbox-','')) - 1;
+    deleteList = removeDuplicate(deleteList);
     if (event.checked) {
         if (event.id === "checkbox-all") {
 
@@ -277,7 +278,7 @@ function addToDeleteList(event) {
         
         return
     }
-
+    
     deleteList.splice(deleteList.indexOf(index),1);
 
     showDeleteButton();
