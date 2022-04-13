@@ -48,6 +48,27 @@
             </div>
         </header>
         <div class="main mb-8">
+            <div class="upload-modal hidden fixed z-30 top-0 p-[50px] h-[100%] bg-[#c8c8c8a6]">
+
+            </div>
+            <div class="exportTable hidden flex flex-row gap-2 mx-4 mb-8">
+                <button class="text-white bg-green-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button" >
+                    Tạo File
+                    <span class="ml-2"> <i class="fa fa-file-excel-o"></i></span>
+                </button>
+                <div class="w-[60%] md:pb-0">
+                    <div>
+                        <label class="input-field inline-flex items-baseline border-solid border-2 rounded-lg shadow-md bg-white p-4 ">
+                            <span class="flex-none text-dusty-blue-darker select-none leading-none">
+                                file_of_zoo/
+                            </span>
+                            <div class="flex-1 leading-none">
+                                <input id="fileName" type="text" class=" placeholder-blue w-full p-0 outline-none  ext-dusty-blue-darker" name="handle" placeholder="Tên file">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
             <div class="max-w-2xl mx-auto">
 
                 <div class="flex flex-col">
@@ -107,12 +128,16 @@
         $('#dropdownInformationButton').click(function() {
             $('#dropdownInformation').toggle()
         })
+        $('.upload-modal').click(function() { $('.upload-modal').toggle()})
     </script>
     <script src="./app/app.js" ></script>
     <script src="./app/getProduct.js" ></script>
     <script src="./app/add_column_item.js" ></script>
     <script src="./app/filter_items.js" ></script>
     <script src="./app/sort_items.js" ></script>
+    <script src="./app/exportExcel.js"></script>
+    <script src="./app/excel.js"></script>
+    <script src="./app/upload_file.js"></script>
     <script>
     //    $(document).ready( function () {
     //         $('#data-table').DataTable();

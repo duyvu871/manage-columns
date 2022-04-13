@@ -15,39 +15,39 @@ function toggleSorted(event) {
 function sortTable(relativeIndex) {
     const table =[...document.querySelectorAll(`[data-col="${relativeIndex}"]`)];
     const sortedTable = quickSort(table).map(el => el.parentNode);
-    $('#table-items').html('')
+    $('#table-items').html('');
     
     sortedTable.forEach(element => {
 
-        $('#table-items').append(element)
+        $('#table-items').append(element);
     });
 }
 
 function setPrimaryItems() {
-    createGridTable(products)
+   createFeatured.createGridTable(products);
 }
 
   function quickSort(arr) {
-    if (arr.length < 2) return arr
+    if (arr.length < 2) return arr;
 
-    let newArr = arr
-    const pivotIndex = newArr.length -1 
-    const pivot = newArr[pivotIndex]
+    let newArr = arr;
+    const pivotIndex = newArr.length -1 ;
+    const pivot = newArr[pivotIndex];
 
-    const left = []
-    const right = []
+    const left = [];
+    const right = [];
 
     let current;
 
     for (let i = 0; i < pivotIndex ; i++) {
-        current = newArr[i]
+        current = newArr[i];
 
         if (!isNaN(current.innerText)) {
             
             if (Number(current.innerText.toLowerCase() ) < Number(pivot.innerText.toLowerCase() )) {
-                left.push(current)
+                left.push(current);
             } else {
-                right.push(current)
+                right.push(current);
             }
         } else {
             if (
@@ -55,13 +55,13 @@ function setPrimaryItems() {
                 < pivot.innerText.toLowerCase()
             ) {
     
-                left.push(current)
+                left.push(current);
             } else {
-                right.push(current)
+                right.push(current);
             }
         }
 
     }
     
-    return [...quickSort(left), pivot, ...quickSort(right)]
+    return [...quickSort(left), pivot, ...quickSort(right)];
 }
