@@ -134,7 +134,7 @@ var createFeatured = {
                 ${item.map((data, index) => {
                     if (index === 1) {
                         return `
-                        <td class="p-4 w-4">
+                        <td class="p-4 w-4 border-r-[1px] border-[#e5e7eb]">
                             <div class="flex items-center">
                                 <input onChange="addFeatured.addToDeleteList(this)" class="checkbox-table-2" id="checkbox-${checkboxIndex + 1}" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <label for="checkbox-table-2" class="sr-only">${data}</label>
@@ -149,7 +149,7 @@ var createFeatured = {
                     }
                     
                     return `
-                    <td data-col="${index + 1}" class=" py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">${data}</td>
+                    <td data-col="${index + 1}" class="border-r-[1px] whitespace-normal border-[#e5e7eb] py-2 px-2 text-sm font-medium text-gray-900  dark:text-white">${data}</td>
                     `
                 }).join('')}
             </tr>`;
@@ -169,7 +169,7 @@ var createFeatured = {
     
                 if (item === 'Select') {
                     return `
-                    <th scope="col" class="p-4">
+                    <th scope="col" class="p-4 border-r-[1px] border-[#e5e7eb]">
                         <div class="flex items-center">
                             <input id="checkbox-all" onChange="checkboxAll(this)" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="checkbox-all" class="sr-only">${item}</label>
@@ -178,14 +178,14 @@ var createFeatured = {
                     `;
                 } else if (!index) {
                     return `
-                    <th scope="col" id="add-column" class="p-2 py-2 px-2 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    <th scope="col" id="add-column" class=" border-r-[1px] border-[#e5e7eb] p-2 py-2 px-2 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         <h1>${item}</h1>
                     </th>
                     `
                 }
         
                 return `
-                <th class="relative py-4 px-6 text-left text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white z-10">
+                <th class=" border-r-[1px] border-[#e5e7eb] relative py-2 px-2 text-left min-w-[170px] text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white z-10">
                     <div class="open-column_option" onClick="showFeatured.showColumnOption(this)" id="col-${index + 1}">
                         ${item} 
                         <span class="ml-2">
