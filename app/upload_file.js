@@ -24,7 +24,7 @@ function uploadFileWithBase64(file,type,timeStamp) {
     task.on(
         'state_change',
         function progress(snap) {
-            console.log(snap.bytesTransferred / snap.totalBytes * 100);
+            // console.log(snap.bytesTransferred / snap.totalBytes * 100);
             switch (snap.state) {
                 case firebase.storage.TaskState.PAUSED: // or 'paused'
                     // console.log('Upload is paused');
@@ -70,20 +70,13 @@ function getFilePathFromURL(url) {
 
 
 function getFileUrl(evt) {
-    
-    // FileList object.
-    const type = 'url'
+    const type = 'url';
     var files = evt.files;
-
     var file = files[0];
-
-    // uploadFileFromBlobOrFile(file,'img')
     
     var fileReader = new FileReader();
 
     fileReader.onload = function(progressEvent) {
-        console.log(fileReader.result);
-
         uploadFileWithBase64(fileReader.result, 'img')
     }
 
@@ -97,20 +90,4 @@ function getFileUrl(evt) {
         fileReader.readAsArrayBuffer(file)
     }
 
-}
-
-const getImagesURL = (path,key) => {
-    let src = ''
-    firebase.storage().ref('img/'+ auth.currentUser.uid + '/' + path)
-            .getDownloadURL()
-            .then(url => {
-               src = url
-               createImgElement(src,`#background`);
-            })
-  
-}
-const createImgElement = (url,appendParent) => { 
-    var img = new Image()
-    img.src = url
-    document.querySelector(appendParent).append(img)
 }

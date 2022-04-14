@@ -44,12 +44,12 @@ var addFeatured = {
     addColumn() {
        hideFeatured.hideModal();
     
-        $('#add-item_form').html(modal(["new-col"], 'Thêm cột', 'addColumnToDB'));
+        $('#add-item_form').html(modal(["new-col"], 'Thêm cột', 'addFeatured.addColumnToDB'));
     },
     addRow() {
        hideFeatured.hideModal();
     
-        $('#add-item_form').html(modal(products.columns, 'Thêm Item', 'addRowToDB'));
+        $('#add-item_form').html(modal(products.columns, 'Thêm Item', 'addFeatured.addRowToDB'));
     },
     addColumnToDB(event) {
         const formData = event.parentNode.parentNode.querySelector('[Name]');
@@ -136,7 +136,7 @@ var createFeatured = {
                         return `
                         <td class="p-4 w-4">
                             <div class="flex items-center">
-                                <input onChange="addToDeleteList(this)" class="checkbox-table-2" id="checkbox-${checkboxIndex + 1}" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <input onChange="addFeatured.addToDeleteList(this)" class="checkbox-table-2" id="checkbox-${checkboxIndex + 1}" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <label for="checkbox-table-2" class="sr-only">${data}</label>
                             </div>
                         </td>
@@ -199,7 +199,7 @@ var createFeatured = {
                             <input type="text" class="border-[#1d4ed8] border-2 rounded-lg p-2" placeholder="Tìm kiếm..."  id="filter-column-${index + 1}" onkeyup="filterContain(this, ${index + 1})" />
                         </div>
                         <div class="w-full p-3 text-sm" id="sort-column-${index + 1}" active="on" onclick="toggleSorted(this)">Sort</div>
-                        <div class="w-full p-3 text-sm" id="delete-column-${index + 1}" onclick="deleteFeatured.eleteColumn(this)">Delete<span class="ml-2"><i class="fa  fa-trash"></i></span></div>
+                        <div class="w-full p-3 text-sm" id="delete-column-${index + 1}" onclick="deleteFeatured.deleteColumn(this)">Delete<span class="ml-2"><i class="fa  fa-trash"></i></span></div>
                     </div>
                 </th>
                 `;
@@ -329,11 +329,29 @@ var deleteFeatured = {
         addFeatured.addDataToDB(products);
     
     },
-
+    addAllToDeleteList() {
+        products.data.forEach((item, index) => deleteList.push(index))
+    }
 }
 
 //Function handle
 
+function checkboxAll(event) {
+    if (event.checked) {
+        $('.checkbox-table-2').each(function() {
+            this.checked = true
+        })
+
+        deleteFeatured.addAllToDeleteList()
+        showFeatured.showDeleteButton()
+
+    } else {
+        $('.checkbox-table-2').each(function() {
+            this.checked = false
+        })
+    }
+
+}
 
 function removeDuplicate(arr) {
     return [...new Set(arr)];
@@ -347,11 +365,7 @@ function exportTable(fileName = 'Cho mày') {
     )
 }
 
-
-
 //ADD event for elements
-
-
 
 $('#login-button').click(function() {
    apiFirebase.signIn();
@@ -369,7 +383,7 @@ $('#add-column button').click(function() {
 $('#delete-row_button').click(deleteFeatured.deleteRow)
 
 $('.exportTable button').click(function() {
-    const fileNameInput = $('fileName').val();
+    const fileNameInput = $('#fileName').val();
     const fileName = fileNameInput ? fileNameInput : 'Cho mày';
     exportTable(fileName)
 })
@@ -379,7 +393,6 @@ auth.onAuthStateChanged((user) => {
         $('#login-button').addClass('hidden');
         $('#logout-button').removeClass('hidden');
         
-
         let uid = apiFirebase.getLogin().uid;
         database.ref('table/' + uid).once('value', (s)=>{
             if (s.val()) {
@@ -399,13 +412,13 @@ auth.onAuthStateChanged((user) => {
             .getDownloadURL()
             .then(url => {
                 createFeatured.setProfile(user, url)
+            }).catch(err => {
+                createFeatured.setProfile(user)
             })
-        
-
         $('.exportTable').removeClass('hidden');
 
     }
-})
+});
 
 
 

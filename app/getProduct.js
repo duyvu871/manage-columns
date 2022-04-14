@@ -4,9 +4,8 @@ function getProduct() {
     database.ref('table/'+ uid).once('value', (snapShoot) => {
         products = snapShoot.val();
     }).then((result) => {
-
-       createFeatured.createGridTable(products)  ;
+       createFeatured.createGridTable(products);
     }).catch((err) => {
-        
+        alert(err)
     });
 }
