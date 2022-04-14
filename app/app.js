@@ -37,7 +37,7 @@ let products = {};
 let deleteList = [];
 
 function signIn() {
-    apiFirebase.signIn()
+    apiFirebase.signIn();
 }
 
 var addFeatured = {
@@ -116,8 +116,15 @@ var addFeatured = {
         database.ref('table/' + uid).set({
             columns: dataProducts.columns,
             data: dataProducts.data
-        })
-       
+        });
+    },
+    addItemByTypeBox(event) {
+        const colIndex = Number(event.getAttribute('data-col')) - 1;
+        const rowIndex = Number(event.getAttribute('data-row')) - 1;
+        const text = event.innerText;
+        if (text !== products.data[rowIndex][colIndex]) {
+            database.ref('table/' + auth.currentUser.uid + `/data/${rowIndex}/${colIndex}`).set(text);
+        }
     }
 }
 
@@ -127,7 +134,6 @@ var createFeatured = {
         const items = dataProducts.data;
         
         const itemsConvert = items.map((item, index)=> {
-    
             const checkboxIndex = index;
             return `
             <tr id="row-${checkboxIndex + 1}" class="hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -136,7 +142,14 @@ var createFeatured = {
                         return `
                         <td class="p-4 w-4 border-r-[1px] border-[#e5e7eb]">
                             <div class="flex items-center">
-                                <input onChange="addFeatured.addToDeleteList(this)" class="checkbox-table-2" id="checkbox-${checkboxIndex + 1}" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <input 
+                                    onChange="addFeatured.addToDeleteList(this)" 
+                                    id="checkbox-${checkboxIndex + 1}" 
+                                    type="checkbox" 
+                                    class="checkbox-table-2 w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 
+                                        focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 
+                                        dark:bg-gray-700 dark:border-gray-600"
+                                >
                                 <label for="checkbox-table-2" class="sr-only">${data}</label>
                             </div>
                         </td>
@@ -149,7 +162,16 @@ var createFeatured = {
                     }
                     
                     return `
-                    <td data-col="${index + 1}" class="border-r-[1px] whitespace-normal border-[#e5e7eb] py-2 px-2 text-sm font-medium text-gray-900  dark:text-white">${data}</td>
+                    <td 
+                        data-col="${index + 1}" 
+                        data-row="${checkboxIndex + 1}" 
+                        onfocusout="addFeatured.addItemByTypeBox(this)" 
+                        contentEditable="true" 
+                        class="max-w-[190px] border-r-[1px] outline-[#15803d] align-text-top whitespace-normal border-[#e5e7eb]
+                            py-2 px-2 text-sm font-medium text-gray-900  dark:text-white"
+                    >
+                        ${data}
+                    </td>
                     `
                 }).join('')}
             </tr>`;
@@ -165,20 +187,29 @@ var createFeatured = {
             </tr>
         `;
     
-        const listConvert =  list.map((item, index)=> {
-    
+        const listConvert =  list.map((item, index)=> { 
                 if (item === 'Select') {
                     return `
                     <th scope="col" class="p-4 border-r-[1px] border-[#e5e7eb]">
                         <div class="flex items-center">
-                            <input id="checkbox-all" onChange="checkboxAll(this)" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <input 
+                                id="checkbox-all" 
+                                onChange="checkboxAll(this)" 
+                                type="checkbox" 
+                                class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600
+                                    dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                            >
                             <label for="checkbox-all" class="sr-only">${item}</label>
                         </div>
                     </th>
                     `;
                 } else if (!index) {
                     return `
-                    <th scope="col" id="add-column" class=" border-r-[1px] border-[#e5e7eb] p-2 py-2 px-2 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    <th 
+                        scope="col" 
+                        id="add-column" 
+                        class=" border-r-[1px] border-[#e5e7eb] p-2 py-2 px-2 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    >
                         <h1>${item}</h1>
                     </th>
                     `
@@ -186,9 +217,9 @@ var createFeatured = {
         
                 return `
                 <th class=" border-r-[1px] border-[#e5e7eb] relative py-2 px-2 text-left min-w-[170px] text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white z-10">
-                    <div class="open-column_option" onClick="showFeatured.showColumnOption(this)" id="col-${index + 1}">
-                        ${item} 
-                        <span class="ml-2">
+                    <div class="open-column_option flex flex-row justify-between "  >
+                        <p contentEditable="true" class="px-[100px] py-2 text-center pl-0 outline-[#15803d]"> ${item} </p>
+                        <span class="ml-2 p-2 pl-4" onClick="showFeatured.showColumnOption(this)" id="col-${index + 1}">
                             <i id="angleDown-${index + 1}"  class="fa fa-angle-down "></i>
                             <i id="angleUp-${index + 1}" style="display:none;" class="fa fa-angle-up "></i>
                         </span>
@@ -196,7 +227,12 @@ var createFeatured = {
     
                     <div class="w-fit  bg-white shadow rounded absolute hidden  ring-4 ring-gray-300 z-50 col_option" id="col-${index + 1}_option">
                         <div class="w-full p-3 text-sm">
-                            <input type="text" class="border-[#1d4ed8] border-2 rounded-lg p-2" placeholder="Tìm kiếm..."  id="filter-column-${index + 1}" onkeyup="filterContain(this, ${index + 1})" />
+                            <input 
+                                type="text" 
+                                class="border-[#1d4ed8] border-2 rounded-lg p-2" 
+                                placeholder="Tìm kiếm..."  id="filter-column-${index + 1}" 
+                                onkeyup="filterContain(this, ${index + 1})" 
+                            />
                         </div>
                         <div class="w-full p-3 text-sm" id="sort-column-${index + 1}" active="on" onclick="toggleSorted(this)">Sort</div>
                         <div class="w-full p-3 text-sm" id="delete-column-${index + 1}" onclick="deleteFeatured.deleteColumn(this)">Delete<span class="ml-2"><i class="fa  fa-trash"></i></span></div>
@@ -217,11 +253,16 @@ var createFeatured = {
     },
     setProfile(user, background) {
         const html = `
-    
                 <div class="mt-4 mb-10  flex flex-wrap items-center  justify-center  ">
                     <div class="container lg:w-2/6 xl:w-2/7 sm:w-full md:w-2/3    bg-white  shadow-lg    transform   duration-200 easy-in-out">
                         <div class=" h-32 overflow-hidden" >
-                            <img id="background" class="w-full" src="${ background || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkS1NjabAII_UBuUN0VuEO7BaUjcx7wOP1Jg&usqp=CAU'}" alt="" onclick="showFeatured.showUploadImageModal()"/>
+                            <img 
+                                id="background" 
+                                class="w-full" 
+                                src="${ background || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkS1NjabAII_UBuUN0VuEO7BaUjcx7wOP1Jg&usqp=CAU'}" 
+                                alt="" 
+                                onclick="showFeatured.showUploadImageModal()"
+                            />
                         </div>
                         <div class="flex justify-center px-5  -mt-12">
                             <img class="h-32 w-32 bg-white p-2 rounded-full   " src="${user.photoURL}" alt="" />
@@ -248,7 +289,7 @@ var createFeatured = {
                     </div>
                 </div>
         `
-        $('.main').prepend(html)
+        $('.main').prepend(html);
     }
 }
 
@@ -256,11 +297,10 @@ var showFeatured = {
     showDeleteButton() {
         if (deleteList.length) {
             $('.delete-row').removeClass('hidden');
-            
             return;
         }
+
         $('.delete-row').addClass('hidden');
-    
         return;
     },
     showColumnOption(event) {
@@ -279,7 +319,6 @@ var hideFeatured = {
     hideModal() {
         $('#add-item_form').html(' ');
     }
-    
 }
 
 var deleteFeatured = {
@@ -295,21 +334,15 @@ var deleteFeatured = {
         const length = products.data.length;
         const uid = apiFirebase.getLogin().uid;
         if (!length) {
+
             const dataForEmpty = products.columns.map(item => {
                 if (item === 'STT') return "";
                 else if (item === "Select") return false;
                 return ""
             });
-            const exampleData = {
-                columns: products.columns,
-                data: [
-                   dataForEmpty
-                ]
-            };
-            database.ref('table/' + uid).set(exampleData);
-        } else {
-            addFeatured.addDataToDB(products);
-        }
+
+            database.ref('table/' + uid).set({ columns: products.columns, data: [dataForEmpty] });
+        } else addFeatured.addDataToDB(products);
     },
     deleteColumn(event) {
         const index = Number(event.id.replace('delete-column-','')) - 1;
@@ -320,17 +353,14 @@ var deleteFeatured = {
             initialArray.splice(index, 1);
             
             return initialArray;
-        })
-        
-        if (products.columns.length < 2) {
-            
-        }
+        });
         createFeatured.createGridTable(products);
         addFeatured.addDataToDB(products);
     
     },
     addAllToDeleteList() {
-        products.data.forEach((item, index) => deleteList.push(index))
+        products.data.forEach((item, index) => deleteList.push(index));
+        deleteList = removeDuplicate(deleteList);
     }
 }
 
@@ -339,16 +369,17 @@ var deleteFeatured = {
 function checkboxAll(event) {
     if (event.checked) {
         $('.checkbox-table-2').each(function() {
-            this.checked = true
-        })
+            this.checked = true;
+        });
 
-        deleteFeatured.addAllToDeleteList()
-        showFeatured.showDeleteButton()
+        deleteFeatured.addAllToDeleteList();
+        showFeatured.showDeleteButton();
 
     } else {
         $('.checkbox-table-2').each(function() {
-            this.checked = false
-        })
+            this.checked = false;
+        });
+        deleteList = [];
     }
 
 }
@@ -367,48 +398,47 @@ function exportTable(fileName = 'Cho mày') {
 
 //ADD event for elements
 
-$('#login-button').click(function() {
-   apiFirebase.signIn();
-})
 
-$('#logout-button').click(function() {
-    apiFirebase.signOut();
-    location.reload()
-})
+    $('#login-button').click(function() {
+        apiFirebase.signIn();
+     })
+     
+     $('#logout-button').click(function() {
+         apiFirebase.signOut();
+         location.reload();
+     });
+     
+     $('#add-column button').click(function() {
+        addFeatured.addColumn();
+     });
+     
+     $('#delete-row_button').click(deleteFeatured.deleteRow);
+     
+     $('.exportTable button').click(function() {
+         const fileNameInput = $('#fileName').val();
+         const fileName = fileNameInput ? fileNameInput : 'Cho mày';
+         exportTable(fileName);
+     });
 
-$('#add-column button').click(function() {
-   addFeatured.addColumn()
-})
-
-$('#delete-row_button').click(deleteFeatured.deleteRow)
-
-$('.exportTable button').click(function() {
-    const fileNameInput = $('#fileName').val();
-    const fileName = fileNameInput ? fileNameInput : 'Cho mày';
-    exportTable(fileName)
-})
+function changeState(state) {
+    $('#login-button').addClass('hidden');
+    $('#logout-button').removeClass('hidden');
+}
 
 auth.onAuthStateChanged((user) => {
     if (user) {
-        $('#login-button').addClass('hidden');
-        $('#logout-button').removeClass('hidden');
-        
+        changeState();
+
         let uid = apiFirebase.getLogin().uid;
-        database.ref('table/' + uid).once('value', (s)=>{
-            if (s.val()) {
-                getProduct()     
-            } else {
-                database.ref('table/' + uid).set({
-                    columns: ['STT', 'Select'],
-                    data: [
-                        ['', false]
-                    ]
-                })
-                setTimeout(getProduct, 1000)
-            }
+
+        database.ref('table/' + uid).once('value', snap => {
+            if ( snap.val() ) getProduct();      
+            else database.ref('table/' + uid).set({columns: ['STT', 'Select'], data: [['', false]] });
+        }).then(res => {
+            getProduct();
         })
 
-        firebase.storage().ref('img/'+ auth.currentUser.uid + '/' + 'background')
+        firebase.storage().ref('img/'+ auth.currentUser.uid + '/background')
             .getDownloadURL()
             .then(url => {
                 createFeatured.setProfile(user, url)
@@ -416,7 +446,6 @@ auth.onAuthStateChanged((user) => {
                 createFeatured.setProfile(user)
             })
         $('.exportTable').removeClass('hidden');
-
     }
 });
 
