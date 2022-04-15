@@ -304,6 +304,18 @@ var createFeatured = {
                 </div>
         `
         $('.main').prepend(html);
+    },
+    createContent() {
+        const frame = [
+            `<iframe class="w-[${document.querySelector('html').offsetWidth - 31}px]" height="416" src="https://www.youtube.com/embed/FtOatrqL85I" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`,
+            `<iframe src="https://chat-app-e5ec2.web.app/" class="w-[100%] h-[50vh]" frameborder="0"></iframe>`
+        ];
+
+        const html = frame.map(item => `
+            <div class="p-4">${item}</div>
+        `).join('');
+
+        $('.content').html(html);
     }
 }
 
@@ -460,6 +472,7 @@ auth.onAuthStateChanged((user) => {
                 createFeatured.setProfile(user)
             })
         $('.exportTable').removeClass('hidden');
+        createFeatured.createContent()
     }
 });
 
