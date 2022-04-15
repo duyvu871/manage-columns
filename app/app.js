@@ -124,6 +124,15 @@ var addFeatured = {
         const text = event.innerText;
         if (text !== products.data[rowIndex][colIndex]) {
             database.ref('table/' + auth.currentUser.uid + `/data/${rowIndex}/${colIndex}`).set(text);
+            products.data[rowIndex][colIndex] = text;
+        }
+    },
+    changeColumnValue(event) {
+        const colIndex = Number(event.getAttribute('data-col')) - 1;
+        const text = event.innerText;
+        if (text !== products.columns[colIndex]) {
+            database.ref('table/' + auth.currentUser.uid + `/columns/${colIndex}`).set(text);
+            products.columns[colIndex] = text;
         }
     }
 }
@@ -218,7 +227,12 @@ var createFeatured = {
                 return `
                 <th class=" border-r-[1px] border-[#e5e7eb] relative py-2 px-2 text-left min-w-[170px] text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white z-10">
                     <div class="open-column_option flex flex-row justify-between "  >
-                        <p contentEditable="true" class="px-[100px] py-2 text-center pl-0 outline-[#15803d]"> ${item} </p>
+                        <p 
+                            contentEditable="true"                        
+                            class="px-[100px] py-2 text-center pl-0 outline-[#15803d] max-w-[120px]"
+                            data-col="${index + 1}" 
+                            onfocusout="addFeatured.changeColumnValue(this)"
+                        > ${item} </p>
                         <span class="ml-2 p-2 pl-4" onClick="showFeatured.showColumnOption(this)" id="col-${index + 1}">
                             <i id="angleDown-${index + 1}"  class="fa fa-angle-down "></i>
                             <i id="angleUp-${index + 1}" style="display:none;" class="fa fa-angle-up "></i>
